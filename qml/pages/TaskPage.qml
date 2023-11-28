@@ -55,15 +55,15 @@ Page {
 
            if (noteEditFlag == 0)
              {
-              JS.dbInsert(dateInput.text, descInput.text);
+              JS.dbInsertTask(dateInput.text, descInput.text);
               listModel.clear();
-              JS.dbReadAll();
+              JS.dbReadAllTask();
              }
            else
             {
-              JS.dbUpdate(noteEditFlag, dateInput.text, descInput.text);
+              JS.dbUpdateTask(noteEditFlag, dateInput.text, descInput.text);
               listModel.clear();
-              JS.dbReadAll();
+              JS.dbReadAllTask();
               noteEditFlag = 0;
             }
 
@@ -121,9 +121,9 @@ Page {
                 MenuItem {
                     text: qsTr("DELETE")
                     onClicked: {
-                      JS.dbDelete(model.id)
+                      JS.dbDeleteTask(model.id)
                       listModel.clear();
-                      JS.dbReadAll();
+                      JS.dbReadAllTask();
 
                     }
                 }
@@ -139,7 +139,7 @@ Page {
      // dbDrop()
 
      JS.dbInit();
-     JS.dbReadAll();
+     JS.dbReadAllTask();
 
      noteEditFlag = 0
 

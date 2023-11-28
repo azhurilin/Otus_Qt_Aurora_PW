@@ -34,9 +34,10 @@
 ** EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **
 *******************************************************************************/
-
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtQuick.LocalStorage 2.0
+import "../assets/Database.js" as JS
 
 Page {
     objectName: "RegistrationPage"
@@ -45,103 +46,81 @@ Page {
     SilicaFlickable {
       objectName: "flickable"
       anchors.fill: parent
-      //contentHeight: layout.height + Theme.paddingLarge
-      contentWidth: layout.width; contentHeight: layout.height
 
       VerticalScrollDecorator { }
 
         PageHeader {
           id :  regheader
           objectName: "pageHeader"
-          title: qsTr("Регистрационная информация")
+          title: qsTr("Registration")
         }
 //=====================*******=====================
         Label {
-          id  : surnamelabel
+          id  : namelabel
           anchors.top: regheader.bottom
-          text: qsTr("ФАМИЛИЯ")
+          text: qsTr("NAME")
+        }
+        TextField {
+          id  : nametext
+          anchors.top: namelabel.bottom
+          focus: true
+          text: qsTr("John")
+        }
+
+        Label {
+          id  : surnamelabel
+          anchors.top: nametext.bottom
+          text:  qsTr("SURNAME")
         }
         TextField {
           id  : surnametext
           anchors.top: surnamelabel.bottom
           focus: true
-          text: qsTr("СМИТ")
-        }
-
-        Label {
-          id  : firstnamelabel
-          anchors.top: surnametext.bottom
-          text:  qsTr("ИМЯ")
-        }
-        TextField {
-          id  : firstnametext
-          anchors.top: firstnamelabel.bottom
-          focus: true
-          text: qsTr("ДЖОН")
-        }
-
-        Label {
-          id  : secondnamelabel
-          anchors.top: firstnametext.bottom
-          text:  qsTr("ОТЧЕСТВО")
-        }
-        TextField {
-          id  : secondnametext
-          anchors.top: secondnamelabel.bottom
-          focus: true
-          text: ""
+          text: qsTr("Smith")
         }
 //=====================*******=====================
         Label {
           id  :   maillabel
-          anchors.top: secondnametext.bottom
-          text:  qsTr("ПОЧТА")
+          anchors.top: surnametext.bottom
+          text:  qsTr("Mail")
         }
         TextField {
           id  : mailtext
           anchors.top: maillabel.bottom
           inputMethodHints: Qt.ImhEmailCharactersOnly
           focus: true
-          text: ""
+          text: "JohnSmith@gmail.com"
         }
 //=====================*******=====================
         Label {
-          id  :   requestlabel
+          id  :   passlabel
           anchors.top: mailtext.bottom
-          text:  qsTr("ТЕМА ЗАМЕТОК")
+          text:  qsTr("PASSWORD")
         }
         TextArea {
-          id : requesttext
-          anchors.top: requestlabel.bottom
+          id :  passtext
+          anchors.top: passlabel.bottom
           focus: true
-          text: qsTr("НОВАЯ ЗАМЕТКА")
+          text: qsTr("qwerty")
         }
 //=====================*******=====================
         TextSwitch {
           id: spamswitch
-          anchors.top: requesttext.bottom
-          text: qsTr("Я согласен на рассылку")
-          // onCheckedChanged: {
-          //   device.setStatus(checked ? DeviceState.Armed : DeviceState.Disarmed)
-          // }
-        }
-        TextSwitch {
-          id: personalswitch
-          anchors.top: spamswitch.bottom
-          text: qsTr("Я согласен на обработку персональных данных")
-          // onCheckedChanged: {
-          //   device.setStatus(checked ? DeviceState.Armed : DeviceState.Disarmed)
-          // }
+          anchors.top: passtext.bottom
+          text: qsTr("I agree to the newsletter")
         }
 //=====================*******=====================
         Button{
           id: startbutton
-          anchors.top: personalswitch.bottom
+          anchors.top: spamswitch.bottom
           anchors.horizontalCenter: parent.horizontalCenter
 
           preferredWidth : Theme.buttonWidthMedium
-          text: qsTr("НАЧАТЬ")
+          text: qsTr("Start")
           onClicked: {
+               JS.dbInsertUser(nametext.text, surnametext.text, mailtext.text, passtext.text, spamswitch.state);
+
+
             pageStack.push(Qt.resolvedUrl("TaskPage.qml"))
             console.log("startbutton clicked")
           }

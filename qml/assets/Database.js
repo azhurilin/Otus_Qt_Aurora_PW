@@ -1,10 +1,12 @@
 //=====================*******==========================================*******=====================
     function dbDrop()
     {
-        var db = LocalStorage.openDatabaseSync("RequestDatabase", "", "notes", 1000000)
+        var db = LocalStorage.openDatabaseSync("TaskDatabase", "", "tasks", 1000000)
         try {
             db.transaction(function (tx) {
-                tx.executeSql("DROP TABLE IF EXISTS  RequestTable");
+                tx.executeSql("DROP TABLE IF EXISTS  TaskTable");
+                tx.executeSql("DROP TABLE IF EXISTS  UserTable");
+
                 console.log("db DROP")
 
             })
@@ -15,11 +17,15 @@
 //=====================*******=====================
     function dbInit()
     {
-        var db = LocalStorage.openDatabaseSync("RequestDatabase", "", "notes", 1000000)
+        var db = LocalStorage.openDatabaseSync("TaskDatabase", "", "tasks", 1000000)
         try {
             db.transaction(function (tx) {
-                tx.executeSql("CREATE TABLE IF NOT EXISTS RequestTable (id INTEGER PRIMARY KEY, date text, request text)");
-              //  tx.executeSql("INSERT INTO RequestTable (date, request) VALUES(?, ?)", ["1234", "Test"]);
+                tx.executeSql("CREATE TABLE IF NOT EXISTS TaskTable (id INTEGER PRIMARY KEY, date TEXT, task TEXT, owner TEXT)");
+               // tx.executeSql("INSERT INTO TaskTable (date, task, owner) VALUES(?, ?, ?)", ["1234", "Test", "JohnSmith@gmail.com"]);
+
+                tx.executeSql("CREATE TABLE IF NOT EXISTS UserTable (id INTEGER PRIMARY KEY, name TEXT, surname TEXT, login TEXT, password TEXT, news INTEGER)");
+
+
                 console.log("db OK")
 
             })
@@ -28,59 +34,83 @@
         };
     }
 //=====================*******=====================
-    function dbReadAll()
+    function dbReadAllTask()
     {
-        var db = LocalStorage.openDatabaseSync("RequestDatabase", "", "notes", 1000000)
+        var db = LocalStorage.openDatabaseSync("TaskDatabase", "", "tasks", 1000000)
         db.transaction(function (tx) {
-            var results = tx.executeSql("SELECT id, date, request FROM RequestTable");
+            var results = tx.executeSql("SELECT id, date, task FROM TaskTable");
 
-          //  for (var i = 0; i < results.rows.length; i++) {
-            for (var i = results.rows.length-1; i >=0 ; i--) {
+           for (var i = results.rows.length-1; i >=0 ; i--) {
 
                 listModel.append({
                                      id: results.rows.item(i).id,
                                      date: results.rows.item(i).date,
-                                     request: results.rows.item(i).request
+                                     request: results.rows.item(i).task
                                  })
                 console.log("dbRead" + results.rows.item(i).id)
             }
         })
     }
 //=====================*******=====================
-    function dbInsert(Pdate, Prequest)
+    function dbInsertTask(Pdate, Ptask)
     {
-       var db = LocalStorage.openDatabaseSync("RequestDatabase", "", "notes", 1000000)
+       var db = LocalStorage.openDatabaseSync("TaskDatabase", "", "tasks", 1000000)
        db.transaction(function (tx) {
-            tx.executeSql("INSERT INTO RequestTable (date, request) VALUES(?, ?)", [Pdate, Prequest]);
+            tx.executeSql("INSERT INTO TaskTable (date, task) VALUES(?, ?)", [Pdate, Ptask]);
 
         })
 
     }
 //=====================*******=====================
-    function dbUpdate(Pid, Pdate, Prequest)
+    function dbUpdateTask(Pid, Pdate, Ptask)
     {
-       var db = LocalStorage.openDatabaseSync("RequestDatabase", "", "notes", 1000000)
+       var db = LocalStorage.openDatabaseSync("TaskDatabase", "", "tasks", 1000000)
        db.transaction(function (tx) {
-            tx.executeSql("UPDATE RequestTable SET date = ?, request = ? WHERE id = ?", [Pdate, Prequest, Pid]);
+            tx.executeSql("UPDATE TaskTable SET date = ?, task = ? WHERE id = ?", [Pdate, Ptask, Pid]);
 
-        //   tx.executeSql("UPDATE RequestTable SET date = ?, request = ? WHERE id = 15", [Pdate, Prequest]);
-
-         console.log("dbUpdate " + Pid)
+           console.log("dbUpdate " + Pid)
 
         })
 
     }
-
-
 //=====================*******=====================
-    function dbDelete(Pid)
+    function dbDeleteTask(Pid)
     {
-       var db = LocalStorage.openDatabaseSync("RequestDatabase", "", "notes", 1000000)
+       var db = LocalStorage.openDatabaseSync("TaskDatabase", "", "tasks", 1000000)
        db.transaction(function (tx) {
-            tx.executeSql("DELETE FROM RequestTable WHERE id = ?", [Pid]);
+          tx.executeSql("DELETE FROM TaskTable WHERE id = ?", [Pid]);
 
-          console.log("dbDelete " + Pid)
+          console.log("dbDeleteTask " + Pid)
         })
 
     }
+//=====================*******=====================
+    function dbInsertUser(Pname, Psurname, Plogin, Ppassword, Pnews)
+    {
+       var db = LocalStorage.openDatabaseSync("TaskDatabase", "", "tasks", 1000000)
+       db.transaction(function (tx) {
+          tx.executeSql("INSERT INTO UserTable (name, surname, login, password, news) VALUES(?, ?, ?, ?, ?)", [Pname, Psurname, Plogin, Ppassword, Pnews]);
+
+    })
+
+}
+//=====================*******=====================
+    function dbDeleteUser(Pid)
+    {
+     var db = LocalStorage.openDatabaseSync("TaskDatabase", "", "tasks", 1000000)
+     db.transaction(function (tx) {
+       tx.executeSql("DELETE FROM UserTable WHERE id = ?", [Pid]);
+
+      console.log("dbDeleteUser " + Pid)
+    })
+
+}
+//=====================*******=====================
+
+
+
+
+
+
+
 //=====================*******==========================================*******=====================
