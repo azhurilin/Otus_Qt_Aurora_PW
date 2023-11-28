@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Icon=ru.auroraos.ElectronicDriveBag
+Exec=/usr/bin/ru.auroraos.ElectronicDriveBag
+Name=Project work of the course Qt & Avrora
+Name[ru]=Проектная работа по курсу Qt и Аврора
+
+[X-Application]
+Permissions=PushNotifications;Audio;Camera;Documents;Downloads;Location;Microphone;Music;Videos
+OrganizationName=ru.auroraos
+ApplicationName=ElectronicDriveBag
+ExecDBus=/usr/bin/ru.auroraos.ElectronicDriveBag
