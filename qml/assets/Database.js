@@ -106,7 +106,41 @@
 
 }
 //=====================*******=====================
+function dbReadUser(Plogin)
+{
+    console.log(Plogin)
+    var db = LocalStorage.openDatabaseSync("TaskDatabase", "", "tasks", 1000000)
+    var ulogin = "";
+    var upass = "";
 
+    db.transaction(function (tx) {
+        var results = tx.executeSql("SELECT id, login, password FROM UserTable  WHERE login = ?", [Plogin]);
+
+       if (results.rows.length > 0)
+          {
+           ulogin = results.rows.item(0).login;
+           upass = results.rows.item(0).password
+           console.log(results.rows.item(0).id +" "+ ulogin +" "+ upass);
+          }
+
+    })
+
+    return [ulogin, upass];
+}
+//=====================*******=====================
+function dbReadAllUser()
+{
+    var db = LocalStorage.openDatabaseSync("TaskDatabase", "", "tasks", 1000000)
+    db.transaction(function (tx) {
+        var results = tx.executeSql("SELECT id, login, password FROM UserTable");
+
+       for (var i = results.rows.length-1; i >=0 ; i--) {
+
+            console.log("dbUser " + results.rows.item(i).id +" "+ results.rows.item(i).login +" "+ results.rows.item(i).password  )
+        }
+    })
+}
+//=====================*******=====================
 
 
 

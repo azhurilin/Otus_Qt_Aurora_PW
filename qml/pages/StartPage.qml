@@ -37,6 +37,8 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtQuick.LocalStorage 2.0
+import "../assets/Database.js" as JS
 
 Page {
     objectName: "startPage"
@@ -68,14 +70,14 @@ Page {
     }
 
     Label {
-      id  : phonelabel
+      id  : passlabel
       anchors.top: logintext.bottom
       text:  qsTr("Password")
     }
 
     TextField {
-      id  : phonetext
-      anchors.top: phonelabel.bottom
+      id  : passtext
+      anchors.top: passlabel.bottom
 
       inputMethodHints: Qt.ImhDialableCharactersOnly
       validator: IntValidator {
@@ -87,16 +89,40 @@ Page {
       text: ""
     }
 
+ //=====================*******=====================
+    Label {
+       id  :   errorlabel
+       anchors.top: passtext.bottom
+       anchors.horizontalCenter: parent.horizontalCenter
+       color: "red"
+       text:  qsTr("ERROR")
+       visible: false
+    }
+
     Button {
       id  : entButton
-      anchors.top: phonetext.bottom
+      anchors.top: errorlabel.bottom
       anchors.horizontalCenter: parent.horizontalCenter
 
        border.color : "black"
        text: "ENTER"
        onClicked: {
-         console.log("entbutton clicked!")
-         pageStack.push(Qt.resolvedUrl("TaskPage.qml"))
+
+          var res = JS.dbReadUser(logintext.text)
+
+          console.log("click->" + logintext.text + "=" + res[0] + "=" + res[1])
+
+          if(res[0] === logintext.text  && res[1] === passtext.text && logintext.text !== "")
+             {
+               errorlabel.visible = false
+               console.log("entbutton clicked!")
+               pageStack.push(Qt.resolvedUrl("TaskPage.qml"))
+             }
+            else
+             {
+                errorlabel.visible = true
+             }
+
        }
     }
 
@@ -114,9 +140,19 @@ Page {
        }
     }
 
+//=====================*******==========================================*******=====================
+        Component.onCompleted: {
+         // dbDrop()
+
+         JS.dbInit();
+         JS.dbReadAllUser();
+
+         JS.dbReadUser("JohnSmith@gmail.com");
 
 
 
+          console.log("StartPagecomplite")
+        }
 
 //=====================*******==========================================*******=====================
 }

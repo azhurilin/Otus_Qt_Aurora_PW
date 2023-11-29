@@ -110,20 +110,43 @@ Page {
           text: qsTr("I agree to the newsletter")
         }
 //=====================*******=====================
+        Label {
+          id  :   errorlabel
+          anchors.top: spamswitch.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          color: "red"
+          text:  qsTr("ERROR")
+          visible: false
+        }
+
+
+//=====================*******=====================
         Button{
           id: startbutton
-          anchors.top: spamswitch.bottom
+          anchors.top: errorlabel.bottom
           anchors.horizontalCenter: parent.horizontalCenter
 
           preferredWidth : Theme.buttonWidthMedium
-          text: qsTr("Start")
+          text: qsTr("START")
           onClicked: {
-               JS.dbInsertUser(nametext.text, surnametext.text, mailtext.text, passtext.text, spamswitch.state);
 
+            var res = JS.dbReadUser(mailtext.text)
 
-            pageStack.push(Qt.resolvedUrl("TaskPage.qml"))
-            console.log("startbutton clicked")
-          }
+            console.log("click->" + mailtext.text + "=" + res[0] + "=" + res[1])
+
+            if(res[0] === mailtext.text)
+              {
+                 errorlabel.visible = true
+              }
+             else
+              {
+                 errorlabel.visible = false
+                 JS.dbInsertUser(nametext.text, surnametext.text, mailtext.text, passtext.text, spamswitch.state);
+                 pageStack.push(Qt.resolvedUrl("TaskPage.qml"))
+                 console.log("startbutton clicked")
+              }
+
+           }
         }
 //=====================*******==========================================*******=====================
    }
